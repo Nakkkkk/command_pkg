@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="command_pkg" name="robot_node" type="goto_destkai"/>
+    <node pkg="command_pkg" name="key_command" type="key_command.py"/>
+</launch>
