@@ -24,14 +24,24 @@ private:
 
 	void cd_point(const geometry_msgs::PointStamped& msg)
 	{
-//		ROS_INFO("cd_point called");
 		current_point = msg;
-		ROS_INFO("I heard in cd_point: [%f]", current_point.point.x);
+//		ROS_INFO("I heard in cd_point: [%f]", current_point.point.x);
+		stack_points();
 	}
 	void cd_key(const std_msgs::Int16::ConstPtr& msg)
 	{
 		current_command = *msg;
-		ROS_INFO("I heard in cd_key: [%d]", current_command.data);
+//		ROS_INFO("I heard in cd_key: [%d]", current_command.data);
+		if(current_command.data == 1)
+		{
+			ROS_INFO("cd_key goto_points");
+			goto_point();
+		}
+		else if(current_command.data == 2)
+		{
+			ROS_INFO("cd_key shutdown");
+			ros::shutdown();
+		}
 	}
 
 public:
@@ -44,7 +54,7 @@ public:
 
 		pub_goal = nh.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 5, true);
 
-		repeat_stack();
+//		repeat_stack();
 
 		ROS_INFO("A");
 
@@ -67,11 +77,11 @@ public:
 				goto_point();
 			}
 */
-			if(current_command.data == 1)
+			if(current_command.data = 1)
 			{
 				goto_point();
 			}
-			else if(current_command.data == 2)
+			else if(current_command.data = 2)
 			{
 				ros::shutdown();
 			}
@@ -81,9 +91,9 @@ public:
 	{
 //		while(current_command.data != 1)
 //		{
-//			ROS_INFO("I heard in stack_point: [%f]", current_point.point.x);
+			ROS_INFO("I heard in stack_point: [%f]", current_point.point.x);
 
-			if(current_point.point.x != 0.0 || current_point.point.y != 0.0)
+			if(current_point.point.x != 0.0 && current_point.point.y != 0.0)
 			{
 				ROS_INFO("C");
 				geometry_msgs::PoseStamped goal;
@@ -94,7 +104,10 @@ public:
 				goals.push_back(goal);
 				ROS_INFO("push_back");
 			}
-//			ROS_INFO("B");
+			else
+			{
+				ROS_INFO("B");
+			}
 //		}
 	}
 	bool pop_points()
@@ -156,7 +169,7 @@ public:
 				if(!pop_points())
 				{
 					ROS_INFO("Finished");
-					break;
+					return;
 				}
 				ROS_INFO("Next goal applied");
 			}

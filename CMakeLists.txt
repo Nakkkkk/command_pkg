@@ -204,6 +204,9 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
+add_executable(goto_destkai2 src/goto_destkai2.cpp)
+target_link_libraries(goto_destkai2 ${catkin_LIBRARIES})
+
 add_executable(goto_destkai src/goto_destkai.cpp)
 target_link_libraries(goto_destkai ${catkin_LIBRARIES})
 

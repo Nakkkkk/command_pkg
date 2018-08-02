@@ -7,19 +7,18 @@
 class rsj_robot_test_node
 {
 private:
-    ros::Publisher pub_goal;
+	ros::Publisher pub_goal;
 	tf::TransformListener tfl;
 
 	std::list<geometry_msgs::PoseStamped> goals;
 	geometry_msgs::PoseStamped current_goal;
 
 public:
-    rsj_robot_test_node()
-    {
-        ros::NodeHandle nh("~");
-        pub_goal = nh.advertise<geometry_msgs::PoseStamped>(
-                    "/move_base_simple/goal", 5, true);
-    }
+	rsj_robot_test_node()
+	{
+	        ros::NodeHandle nh("~");
+		pub_goal = nh.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 5, true);
+	}
 	void add_goal(const float x, const float y, const float yaw)
 	{
 		geometry_msgs::PoseStamped goal;
@@ -43,7 +42,7 @@ public:
 
 		return true;
 	}
-    void mainloop()
+	void mainloop()
 	{
 		ROS_INFO("Hello ROS World!");
 
@@ -99,14 +98,12 @@ public:
 
 int main(int argc, char *argv[])
 {
-    ros::init(argc, argv, "rsj_robot_test_node");
+	ros::init(argc, argv, "rsj_robot_test_node");
 
-    rsj_robot_test_node robot_test;
+	rsj_robot_test_node robot_test;
 
-	// 行き先を追加
 	robot_test.add_goal(0.3, -0.3, 0.0);
-	robot_test.add_goal(0.2, 0.2, 1.57);
 
-    robot_test.mainloop();
+	robot_test.mainloop();
 }
 
