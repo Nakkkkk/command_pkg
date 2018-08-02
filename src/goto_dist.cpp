@@ -3,6 +3,7 @@
 
 #include <tf/transform_datatypes.h>
 #include <tf/transform_listener.h>
+using namespace std;
 
 class rsj_robot_test_node
 {
@@ -47,7 +48,7 @@ public:
 
 	void add_goal(const geometry_msgs::PointStamped& msg)
 	{
-		if(msg.point.x != 0 && msg.point.y !=0)
+		if(msg.point.x != 0 && msg.point.y != 0)
 		{
 //		ROS_INFO("C");
 		geometry_msgs::PoseStamped goal;
@@ -75,30 +76,71 @@ public:
 
 		return true;
 	}
+
+	int command()
+	{
+		char key;
+		cin >> key;
+
+		switch (key) {
+		case 's':
+			return 1;
+		}
+		return 0;
+
+	}
+
+	void stamp_points()
+	{
+		ROS_INFO("B");
+		ros::Rate rate(5.0);
+
+		while(ros::ok)
+		{
+/*
+			ROS_INFO("plz stamp points where you want to move.");
+			ROS_INFO("plz pless S button to move");
+
+			rate.sleep();
+			char key;
+			cin >> key;
+*/
+//			while(key != 's')
+//			{
+				ROS_INFO("c");
+				rate.sleep();
+				add_goal(current_point);
+//			}
+			if()
+			mainloop();
+		}
+	}
+
     void mainloop()
 	{
 		ROS_INFO("Hello ROS World!");
 		ros::Rate rate(5.0);
 
-	while(ros::ok())
-	{
-		rate.sleep();
-		ros::spinOnce();
+//	while(ros::ok())
+//	{
+//		rate.sleep();
+//		ros::spinOnce();
 
-		add_goal(current_point);
+//		add_goal(current_point);
 
 		if(!pop_goal())
 		{
 //			ROS_ERROR("waitting destination points");
-//			ROS_ERROR("No goal specified");
+			ROS_ERROR("No goal specified");
 //			return;
+//			break;
 		}else{
 //		ROS_ERROR("waitting destination points");
 
 		while(ros::ok())
 		{
-//			rate.sleep();
-//			ros::spinOnce();
+			rate.sleep();
+			ros::spinOnce();
 
 			float x, y, yaw;
 			try
@@ -138,7 +180,7 @@ public:
 		}
 		}
 	}
-	}
+//	}
 };
 
 int main(int argc, char *argv[])
@@ -151,6 +193,6 @@ int main(int argc, char *argv[])
 //	robot_test.add_goal(0.3, -0.3, 0.0);
 //	robot_test.add_goal(0.2, 0.2, 1.57);
 
-    robot_test.mainloop();
-
+//    robot_test.mainloop();
+    robot_test.stamp_points();
 }

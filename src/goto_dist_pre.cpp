@@ -16,32 +16,10 @@ private:
 	geometry_msgs::PoseStamped current_goal;
 	geometry_msgs::PointStamped current_point;
 
-//	void cd_point(const geometry_msgs::PointStamped& msg)
-//	{
-//		current_point = *msg;
-//	}
-
-	void add_goal(const geometry_msgs::PointStamped& msg)
+	void cd_point(const geometry_msgs::PointStamped& msg)
 	{
-		ROS_INFO("C");
-		geometry_msgs::PoseStamped goal;
-		goal.header.frame_id = "map";
-		goal.pose.position.x = msg.point.x;
-		goal.pose.position.y = msg.point.y;
-//		goal.pose.orientation = msg.pose.orientation;
-		goals.push_back(goal);
-		ROS_INFO("B");
+		current_point = msg;
 	}
-
-public:
-
-    rsj_robot_test_node()
-    {
-        ros::NodeHandle nh("~");
-	sub = nh.subscribe("/clicked_point", 1000, &rsj_robot_test_node::add_goal, this);
-        pub_goal = nh.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 5, true);
-	ROS_INFO("A");
-    }
 /*
 	void add_goal(const geometry_msgs::PointStamped& msg)
 	{
@@ -55,6 +33,34 @@ public:
 		ROS_INFO("B");
 	}
 */
+public:
+
+    rsj_robot_test_node()
+    {
+        ros::NodeHandle nh("~");
+	sub = nh.subscribe("/clicked_point", 1000, &rsj_robot_test_node::cd_point, this);
+        pub_goal = nh.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 5, true);
+	ROS_INFO("A");
+
+//	ros::spin();
+    }
+
+	void add_goal(const geometry_msgs::PointStamped& msg)
+	{
+		if(msg.point.x != 0 && msg.point.y !=0)
+		{
+//		ROS_INFO("C");
+		geometry_msgs::PoseStamped goal;
+		goal.header.frame_id = "map";
+		goal.pose.position.x = msg.point.x;
+		goal.pose.position.y = msg.point.y;
+		goal.pose.orientation = tf::createQuaternionMsgFromYaw(0.0);
+		goals.push_back(goal);
+		ROS_INFO("push_back");
+		}
+//		ROS_INFO("B");
+	}
+
 	bool pop_goal()
 	{
 		if(goals.size() == 0) return false;
@@ -72,22 +78,27 @@ public:
     void mainloop()
 	{
 		ROS_INFO("Hello ROS World!");
+		ros::Rate rate(5.0);
 
 	while(ros::ok())
-	{    
-		ros::Rate rate(5.0);
+	{
+		rate.sleep();
+		ros::spinOnce();
+
+		add_goal(current_point);
+
 		if(!pop_goal())
 		{
 //			ROS_ERROR("waitting destination points");
 //			ROS_ERROR("No goal specified");
 //			return;
 		}else{
-		ROS_ERROR("waitting destination points");
+//		ROS_ERROR("waitting destination points");
 
-//		while(ros::ok())
-//		{
-			rate.sleep();
-			ros::spinOnce();
+		while(ros::ok())
+		{
+//			rate.sleep();
+//			ros::spinOnce();
 
 			float x, y, yaw;
 			try
@@ -119,11 +130,12 @@ public:
 				if(!pop_goal())
 				{
 					ROS_INFO("Finished");
-					return;
+					//return;
+					break;
 				}
 				ROS_INFO("Next goal applied");
 			}
-//		}
+		}
 		}
 	}
 	}
@@ -140,4 +152,5 @@ int main(int argc, char *argv[])
 //	robot_test.add_goal(0.2, 0.2, 1.57);
 
     robot_test.mainloop();
+
 }
