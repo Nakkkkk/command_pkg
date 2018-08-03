@@ -9,6 +9,13 @@ def key_command():
     pub = rospy.Publisher('/command', Int16, queue_size=10)
     rospy.init_node('key_command')
     r = rospy.Rate(10) # 10hz
+
+    print("plz push a key.")
+    print("================")
+    print(" s key : start")
+    print(" q key : quit")
+    print("================")
+
     while not rospy.is_shutdown():
 
       kb = readchar.readchar()

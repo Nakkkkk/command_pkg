@@ -210,8 +210,11 @@ target_link_libraries(goto_destkai2 ${catkin_LIBRARIES})
 add_executable(goto_destkai src/goto_destkai.cpp)
 target_link_libraries(goto_destkai ${catkin_LIBRARIES})
 
-add_executable(goto_dest_org src/goto_dest_org.cpp)
-target_link_libraries(goto_dest_org ${catkin_LIBRARIES})
+#add_executable(goto_dest_org src/goto_dest_org.cpp)
+#target_link_libraries(goto_dest_org ${catkin_LIBRARIES})
 
-add_executable(stop src/stop.cpp)
+add_executable(stopkai src2/stopkai.cpp)
+target_link_libraries(stopkai ${catkin_LIBRARIES})
+
+add_executable(stop src2/stop.cpp)
 target_link_libraries(stop ${catkin_LIBRARIES})
